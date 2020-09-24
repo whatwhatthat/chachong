@@ -1,0 +1,116 @@
+package chachong;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class ReadAndWriteTxtByFile {
+    /**
+     * 功能：Java读取txt文件的内容 步骤：
+     * 1：先获得文件句柄
+     * 2：获得文件句柄当做是输入一个字节码流，需要对这个输入流进行读取
+     * 3：读取到输入流后，需要读取生成字节流
+     *  4：一行一行的输出。readline()。 备注：需要考虑的是异常情况
+     * @param filePath
+     */
+    public static void readTxtFile(String filePath) {
+        try {
+            String encoding = "GBK";
+            File file = new File(filePath);
+            if (file.isFile() && file.exists()) { // 判断文件是否存在
+                InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);// 考虑到编码格式
+                BufferedReader bufferedReader = new BufferedReader(read);
+                String lineTxt = null;
+                while ((lineTxt = bufferedReader.readLine()) != null) {
+                    System.out.println(lineTxt);
+                }
+                read.close();
+            }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeTxtFile(String filepath){
+        File file=new File(filepath);
+        BufferedWriter writer = null;
+        try {
+            if(file.isFile()&&!file.exists()){
+                System.out.println("找不到指定的文件");
+                file.createNewFile();// 不存在则创建
+            }
+           else{
+                //writer = new BufferedWriter(new FileWriter(file,true)); //这里加入true 可以不覆盖原有TXT文件内容 续写
+                writer = new BufferedWriter(new FileWriter(file));
+                writer.write("hello");
+                writer.write("\n");
+                writer.write("hello");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.flush();
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void main(String argv[]) {
+        String filepath=System.getProperty("user.dir")+"/test/orig.txt";
+        writeTxtFile(filepath);
+        readTxtFile(filepath);
+
+        String filepath1=System.getProperty("user.dir")+"/test/orig_0.8_add.txt";
+        writeTxtFile(filepath1);
+        readTxtFile(filepath1);
+
+        String filepath2=System.getProperty("user.dir")+"/test/orig_0.8_del.txt";
+        writeTxtFile(filepath2);
+        readTxtFile(filepath2);
+
+        String filepath3=System.getProperty("user.dir")+"/test/orig_0.8_dis_1.txt";
+        writeTxtFile(filepath3);
+        readTxtFile(filepath3);
+
+        String filepath4=System.getProperty("user.dir")+"/test/orig_0.8_dis_10.txt";
+        writeTxtFile(filepath4);
+        readTxtFile(filepath4);
+
+        String filepath5=System.getProperty("user.dir")+"/test/orig_0.8_dis_15.txt";
+        writeTxtFile(filepath5);
+        readTxtFile(filepath5);
+
+        String filepath6=System.getProperty("user.dir")+"/src/test/orig_0.8_dis.txt";
+        writeTxtFile(filepath6);
+        readTxtFile(filepath6);
+
+        Check t2 = new Check(filepath, filepath1);
+        Check t3 = new Check(filepath, filepath2);
+        Check t4 = new Check(filepath, filepath3);
+        Check t5 = new Check(filepath, filepath4);
+        Check t6 = new Check(filepath, filepath5);
+
+        Check t7 = new Check(filepath, filepath6);
+        System.out.println("orig_0.8_dis.txt  " + t7.sim());
+
+        System.out.println("orig_0.8_add.txt  " + t2.sim());
+        System.out.println("orig_0.8_del.txt  " + t3.sim());
+        System.out.println("orig_0.8_dis_1.txt  " + t4.sim());
+        System.out.println("orig_0.8_dis_10.txt  " + t5.sim());
+        System.out.println("orig_0.8_dis_15.txt  " + t6.sim());
+
+    }
+}
